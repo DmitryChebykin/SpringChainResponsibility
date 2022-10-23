@@ -2,7 +2,9 @@ package com.example.springchainresponsibility.service.event;
 
 import com.example.springchainresponsibility.service.DataRepository;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserIdListener {
     private final DataRepository dataRepository;
 
@@ -11,7 +13,7 @@ public class UserIdListener {
     }
 
     @EventListener
-    void saveUserId(UserIdProcessEvent userIdProcessEvent) {
+    public void saveUserId(UserIdProcessEvent userIdProcessEvent) {
         dataRepository.saveUserId(userIdProcessEvent.getUserId());
     }
 }

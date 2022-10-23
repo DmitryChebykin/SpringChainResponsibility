@@ -4,6 +4,8 @@ import com.example.springchainresponsibility.payload.Message;
 import com.example.springchainresponsibility.payload.Response;
 import com.example.springchainresponsibility.service.event.UserIdProcessEvent;
 import com.example.springchainresponsibility.step.AbstractStep;
+import com.example.springchainresponsibility.step.base.ErrorStep;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -16,7 +18,8 @@ import java.util.Optional;
 public class UserInfoByIdService extends AbstractStep {
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public UserInfoByIdService(ApplicationEventPublisher applicationEventPublisher) {
+    public UserInfoByIdService(ApplicationEventPublisher applicationEventPublisher, @Autowired ErrorStep errorStep) {
+        super.setErrorStep(errorStep);
         this.applicationEventPublisher = applicationEventPublisher;
     }
 

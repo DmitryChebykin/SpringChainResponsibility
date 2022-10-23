@@ -24,24 +24,27 @@ public abstract class AbstractStep implements ProcessStep {
 
     @Override
     public final Message process(Message message) {
+        if (message.isNextStep()) {
 
-        return processAndApplyNext(message)
-                .map(processedMessage -> {
-                    Message enrich;
-                    try {
-                        enrich = nextStep.process(processedMessage);
-                    } catch (Exception e) {
-                        ArrayList<String> errors = new ArrayList<>();
-                        errors.add(e.getMessage());
-                        Response response = Response.builder().errors(errors).build();
-                        Map<String, Response> responseMap = processedMessage.getResponseMap();
-                        responseMap.clear();
-                        responseMap.put(getStepName(), response);
-                        enrich = errorStep.process(processedMessage);
-                    }
-                    return enrich;
-                })
-                .orElseGet(() -> nextStep.process(message));
+            return processAndApplyNext(message)
+                    .map(processedMessage -> {
+                        Message enrich;
+                        try {
+                            enrich = nextStep.process(processedMessage);
+                        } catch (Exception e) {
+                            ArrayList<String> errors = new ArrayList<>();
+                            errors.add(e.getMessage());
+                            Response response = Response.builder().errors(errors).build();
+                            Map<String, Response> responseMap = processedMessage.getResponseMap();
+                            responseMap.clear();
+                            responseMap.put(getStepName(), response);
+                            enrich = errorStep.process(processedMessage);
+                        }
+                        return enrich;
+                    })
+                    .orElseGet(() -> nextStep.process(message));
+        }
+        return message;
     }
 
     protected abstract Optional<Message> processAndApplyNext(Message message);

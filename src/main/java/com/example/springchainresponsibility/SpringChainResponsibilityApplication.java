@@ -37,13 +37,34 @@ public class SpringChainResponsibilityApplication {
                 "userId", "086-40-4550",
                 "cardId", "1234-2121-1221-1211"
         ));
+
+        processMessage(Map.of(
+                "ip", "192.236.111.22",
+                "userId", "086-40-4550",
+                "cardId", "1234-2121-1221-1211"
+        ));
+
+        processMessage(Map.of(
+                "ip", "105.236.111.22",
+                "userId", "000-00-000",
+                "cardId", "1234-2121-1221-1211"
+        ));
+
+        processMessage(Map.of(
+                "ip", "192.236.111.22",
+                "userId", "086-40-4550",
+                "cardId", "1111-2121-1221-1211"
+        ));
     }
 
     private void processMessage(Map<String, String> requestMap) {
+        Message startMessage = Message.builder()
+                .requestMap(requestMap)
+                .isNextStep(true)
+                .build();
+
         Message message = processFacade.startChain(
-                Message.builder()
-                        .requestMap(requestMap)
-                        .build());
+                startMessage);
 
         log.info("Result message: {}", message);
 
